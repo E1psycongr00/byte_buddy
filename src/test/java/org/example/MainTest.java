@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
@@ -17,16 +16,16 @@ class MainTest {
     @Test
     void newClassTest()
             throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Class<?> dynamicType = new ByteBuddy()
+        Class<?> toString = new ByteBuddy()
                 .subclass(Object.class)
-                .method(ElementMatchers.named("toString"))
+                .method(named("toString"))
                 .intercept(FixedValue.value("Hello world!"))
-                .make()
-                .load(getClass().getClassLoader())
+                .make().load(getClass().getClassLoader())
                 .getLoaded();
-
-        assertThat(dynamicType.getConstructor().newInstance().toString())
+        assertThat(toString.getConstructor().newInstance().toString())
                 .isEqualTo("Hello world!");
+
+
     }
 
     @Test
